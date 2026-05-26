@@ -264,7 +264,6 @@ editor.dispose();
 
 - RxJS subscriptions
 - setInterval / setTimeout
-- HostListeners
 - fromEvent()
 - Route reuse
 - Shared services storing stale data
