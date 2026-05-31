@@ -1,3 +1,5 @@
+Link: `https://blog.angular-university.io/how-does-angular-2-change-detection-really-work/?utm_source=chatgpt.com`
+
 # Angular Change Detection Notes
 
 # What is Change Detection (CD)?
