@@ -118,3 +118,109 @@ share():
 - manages shared subscription lifecycle
 - prevents duplicate execution
 - internally uses Subject
+
+
+
+# Subject vs share()
+
+## Subject
+
+A Subject is both:
+
+- Observable
+- Observer
+
+It allows multicasting.
+
+```ts
+const subject = new Subject();
+
+subject.subscribe(v => console.log('A', v));
+subject.subscribe(v => console.log('B', v));
+
+subject.next(1);
+```
+
+Output:
+
+```text
+A 1
+B 1
+```
+
+One producer → many consumers.
+
+---
+
+## Problem with Normal Observables
+
+```ts
+const data$ = http.get('/api');
+
+data$.subscribe();
+data$.subscribe();
+```
+
+Creates:
+
+```text
+HTTP Request #1
+HTTP Request #2
+```
+
+Observables are unicast by default.
+
+---
+
+## Using Subject for Sharing
+
+```ts
+const subject = new Subject();
+
+http.get('/api').subscribe(subject);
+
+subject.subscribe(...);
+subject.subscribe(...);
+```
+
+Flow:
+
+```text
+HTTP Request #1
+       ↓
+    Subject
+    ↙    ↘
+   A      B
+```
+
+Only one HTTP request.
+
+---
+
+## share()
+
+```ts
+const data$ = http.get('/api').pipe(
+  share()
+);
+```
+
+`share()` internally uses a Subject to multicast a source Observable.
+
+Benefits:
+
+- One source execution
+- Multiple subscribers
+- No manual Subject wiring
+
+---
+
+## Interview Answer
+
+### Subject
+
+A multicast Observable that is both an Observer and an Observable.
+
+### share()
+
+Converts a cold/unicast Observable into a shared/multicast Observable by internally using a Subject.
